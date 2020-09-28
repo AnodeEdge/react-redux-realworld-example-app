@@ -1,35 +1,35 @@
 version: 0.2 
 phases: 
  install: 
- commands: 
-  - echo not installing anything... 
+  commands: 
+    - echo not installing anything... 
  pre_build: 
   # - echo downloading repository...
   # - git clone https://github.com/AnodeEdge/react-redux-realworld-example-app.git
   # - cd react-redux-realworld-example-app/  
- commands: 
-  - echo Loggin in to Amazon ECR... 
-  - IMAGE_REPO_NAME=conduit-app
-  - REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME 
-  - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION) 
-  - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7) 
-  - IMAGE_TAG=${COMMIT_HASH:=latest} 
+  commands: 
+    - echo Loggin in to Amazon ECR... 
+    - IMAGE_REPO_NAME=conduit-app
+    - REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME 
+    - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION) 
+    - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7) 
+    - IMAGE_TAG=${COMMIT_HASH:=latest} 
  build: 
- commands: 
-  - echo Build started on `date` 
-  - echo Build docker image 
-  # Use repo_uri as the image name and tag it as latest 
-  - docker build -t $REPO_URI:latest . 
-  - echo tag docker image 
-  # Tag source should match the argument passed to -t in docker build 
-  - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG 
+  commands: 
+    - echo Build started on `date` 
+    - echo Build docker image 
+    # Use repo_uri as the image name and tag it as latest 
+    - docker build -t $REPO_URI:latest . 
+    - echo tag docker image 
+    # Tag source should match the argument passed to -t in docker build 
+    - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG 
  post_build: 
- commands: 
-  - echo Build completed on `date` 
-  - echo Pushing the Docker image... 
-  - echo "Build with $IMAGE_REPO_NAME, $REPO_URI, $IMAGE_TAG" 
-  - docker push $REPO_URI:$IMAGE_TAG 
-  - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $REPO_URI:$IMAGE_TAG > imagedefinitions.json 
-  - cat imagedefinitions.json 
+  commands: 
+    - echo Build completed on `date` 
+    - echo Pushing the Docker image... 
+    - echo "Build with $IMAGE_REPO_NAME, $REPO_URI, $IMAGE_TAG" 
+    - docker push $REPO_URI:$IMAGE_TAG 
+    - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $REPO_URI:$IMAGE_TAG > imagedefinitions.json 
+    - cat imagedefinitions.json 
 artifacts: 
   files: imagedefinitions.json 
