@@ -3,10 +3,6 @@ phases:
  install: 
   commands: 
     - echo not installing anything... 
-    - echo Regurgitate Env Variables
-    - echo $AWS_ACCOUNT_ID
-    - echo $IMAGE_TAG
-    - echo $IMAGE_REPO_NAME
  pre_build: 
   commands: 
     - echo Loggin in to Amazon ECR... 
