@@ -4,10 +4,9 @@ phases:
   commands: 
     - echo not installing anything... 
     - echo Regurgitate Env Variables
-    - echo $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION) 
     - echo $AWS_ACCOUNT_ID
-    - echo $AWS_DEFAULT_REGION
-    - echo $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7) 
+    - echo $IMAGE_TAG
+    - echo $IMAGE_REPO_NAME
  pre_build: 
   commands: 
     - echo Loggin in to Amazon ECR... 
